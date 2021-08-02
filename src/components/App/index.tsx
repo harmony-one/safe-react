@@ -17,7 +17,7 @@ import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
 import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { HARMONY_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
@@ -62,13 +62,15 @@ const useStyles = makeStyles(notificationStyles)
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
   const currentNetwork = useSelector(networkSelector)
-  const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
+  const isWrongNetwork = currentNetwork !== HARMONY_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
-  const { address: safeAddress, name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(
-    currentSafeWithNames,
-  )
+  const {
+    address: safeAddress,
+    name: safeName,
+    totalFiatBalance: currentSafeBalance,
+  } = useSelector(currentSafeWithNames)
   const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)

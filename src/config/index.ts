@@ -2,7 +2,7 @@ import memoize from 'lodash.memoize'
 import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
-  ETHEREUM_NETWORK,
+  HARMONY_NETWORK,
   FEATURES,
   GasPriceOracle,
   NetworkInfo,
@@ -10,14 +10,12 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
-import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
+import { APP_ENV, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
+export const getNetworkId = (): HARMONY_NETWORK => HARMONY_NETWORK[NETWORK]
 
-export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
-
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+export const getNetworkName = (): string => HARMONY_NETWORK[getNetworkId()]
 
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
@@ -44,7 +42,7 @@ const configuration = (): NetworkSpecificConfiguration => {
 
   // special case for test environment
   if (currentEnvironment === 'test') {
-    const configFile = networks.local
+    const configFile = networks.testnet
 
     return {
       ...configFile.environment.production,
@@ -69,7 +67,7 @@ const configuration = (): NetworkSpecificConfiguration => {
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
 export const getNetworks = (): NetworkInfo[] => {
-  const { local, ...usefulNetworks } = networks
+  const { ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,
     label: networkObj.network.label,
@@ -91,13 +89,14 @@ export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
 
-export const getRpcServiceUrl = (): string =>
-  usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
-
 export const getSafeClientGatewayBaseUrl = (safeAddress: string) => `${getClientGatewayUrl()}/safes/${safeAddress}`
 
 export const getTxDetailsUrl = (clientGatewayTxId: string) =>
   `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
+
+export const getRpcServiceUrl = (): string => {
+  return getConfig().rpcServiceUrl
+}
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
@@ -125,8 +124,6 @@ export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disab
 
 export const getNetworkInfo = (): NetworkSettings => getConfig().network
 
-export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID
-
 const fetchContractABI = memoize(
   async (url: string, contractAddress: string, apiKey?: string) => {
     let params: Record<string, string> = {
@@ -152,9 +149,6 @@ const fetchContractABI = memoize(
 
 const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefined => {
   switch (networkExplorerName.toLowerCase()) {
-    case 'etherscan': {
-      return ETHERSCAN_API_KEY
-    }
     default: {
       return undefined
     }
