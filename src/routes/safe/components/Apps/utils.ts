@@ -7,7 +7,6 @@ import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { HARMONY_NETWORK } from 'src/config/networks/network.d'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { AppData, fetchSafeAppsList } from './api/fetchSafeAppsList'
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
@@ -24,17 +23,6 @@ export type StaticAppInfo = {
   networks: number[]
 }
 export const staticAppsList: Array<StaticAppInfo> = []
-
-export const getAppsList = async (): Promise<AppData[]> => {
-  let result
-  try {
-    result = await fetchSafeAppsList()
-  } catch (error) {
-    console.error('Could not fetch remote apps list', error)
-  }
-
-  return result?.apps && result?.apps.length ? result.apps : staticAppsList
-}
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {
