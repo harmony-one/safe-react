@@ -17,7 +17,6 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
-const Apps = React.lazy(() => import('src/routes/safe/components/Apps'))
 const Settings = React.lazy(() => import('src/routes/safe/components/Settings'))
 const Balances = React.lazy(() => import('src/routes/safe/components/Balances'))
 const TxList = React.lazy(() => import('src/routes/safe/components/Transactions/TxList'))
@@ -69,16 +68,6 @@ const Container = (): React.ReactElement => {
           exact
           path={`${matchSafeWithAddress?.path}/transactions`}
           render={() => wrapInSuspense(<TxList />, null)}
-        />
-        <Route
-          exact
-          path={`${matchSafeWithAddress?.path}/apps`}
-          render={({ history }) => {
-            if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
-              history.push(`${matchSafeWithAddress?.url}/balances`)
-            }
-            return wrapInSuspense(<Apps />, null)
-          }}
         />
         <Route
           exact

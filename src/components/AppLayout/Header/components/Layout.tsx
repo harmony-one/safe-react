@@ -7,8 +7,6 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
-import NetworkSelector from './NetworkSelector'
-
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
@@ -16,8 +14,7 @@ import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
-import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { getNetworks } from 'src/config'
+import HarmonyLogo from '../assets/logo.png'
 
 const styles = () => ({
   root: {
@@ -38,10 +35,8 @@ const styles = () => ({
     zIndex: 1301,
   },
   logo: {
-    flexBasis: '140px',
     flexShrink: '0',
     flexGrow: '0',
-    maxWidth: '55px',
     padding: sm,
     marginTop: '4px',
     [`@media (min-width: ${screenSm}px)`]: {
@@ -65,14 +60,11 @@ const styles = () => ({
 
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
-  const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const networks = getNetworks()
-  const { isDesktop } = window
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link to="/">
-          <Img alt="Gnosis Team Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
+          <Img alt="Harmony Multisig" height={36} src={HarmonyLogo} testId="heading-multisig-logo" />
         </Link>
       </Col>
       <Spacer />
@@ -102,14 +94,6 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
           </Popper>
         )}
       />
-      {!isDesktop && (
-        <NetworkSelector
-          open={openNetworks}
-          networks={networks}
-          toggle={toggleNetworks}
-          clickAway={clickAwayNetworks}
-        />
-      )}
     </Row>
   )
 }

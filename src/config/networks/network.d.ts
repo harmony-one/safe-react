@@ -2,19 +2,6 @@
 
 export enum WALLETS {
   METAMASK = 'metamask',
-  WALLET_CONNECT = 'walletConnect',
-  TREZOR = 'trezor',
-  LEDGER = 'ledger',
-  TRUST = 'trust',
-  FORTMATIC = 'fortmatic',
-  PORTIS = 'portis',
-  AUTHEREUM = 'authereum',
-  TORUS = 'torus',
-  COINBASE = 'coinbase',
-  WALLET_LINK = 'walletLink',
-  OPERA = 'opera',
-  OPERA_TOUCH = 'operaTouch',
-  LATTICE = 'lattice',
 }
 
 export enum FEATURES {
@@ -33,18 +20,10 @@ type Token = {
   logoUri?: string
 }
 
-export enum ETHEREUM_NETWORK {
+export enum HARMONY_NETWORK {
+  MAINNET = 1666600000,
+  TESTNET = 1666700000,
   UNKNOWN = 0,
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  XDAI = 100,
-  ENERGY_WEB_CHAIN = 246,
-  LOCAL = 4447,
-  VOLTA = 73799,
 }
 
 export type NetworkSettings = {

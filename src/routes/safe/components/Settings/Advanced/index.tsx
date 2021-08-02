@@ -9,7 +9,6 @@ import { ModulesTable } from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -29,11 +28,6 @@ export const Advanced = (): React.ReactElement => {
   const classes = useStyles()
   const { nonce, modules } = useSelector(currentSafe) ?? {}
   const moduleData = modules ? getModuleData(modules) ?? null : null
-  const { trackEvent } = useAnalytics()
-
-  useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Advanced' })
-  }, [trackEvent])
 
   return (
     <>

@@ -3,7 +3,8 @@ import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import Web3 from 'web3'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { HARMONY_NETWORK } from 'src/config/networks/network.d'
+import { getNetworkId } from 'src/config/index'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
@@ -15,41 +16,68 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import SpendingLimitModule from './artifacts/AllowanceModule.json'
 
+const MULTI_SEND_ADDRESSES = {
+  [HARMONY_NETWORK.MAINNET]: '0xDEff67e9A02b4Ce60ff62F3CB5FFB41d48856285',
+  [HARMONY_NETWORK.TESTNET]: '0xF39E79A7B8B319a2554abd3469463f6620C117Bb',
+}
+
+const SAFE_MASTER_COPY_ADDRESSES = {
+  [HARMONY_NETWORK.MAINNET]: '0x3736aC8400751bf07c6A2E4db3F4f3D9D422abB2',
+  [HARMONY_NETWORK.TESTNET]: '0x0F2f043DBc72D3948bB7E392E6E3258dc2743376',
+}
+
+const DEFAULT_FALLBACK_HANDLER_ADDRESSES = {
+  [HARMONY_NETWORK.MAINNET]: '0xC5d654bcE1220241FCe1f0F1D6b9E04f75175452',
+  [HARMONY_NETWORK.TESTNET]: '0x6B0d84741F7EE66B72bF262A1eDB772d01E2aFE6',
+}
+
+const SAFE_MASTER_COPY_ADDRESS_V10ES = {
+  [HARMONY_NETWORK.MAINNET]: '0x3736aC8400751bf07c6A2E4db3F4f3D9D422abB2',
+  [HARMONY_NETWORK.TESTNET]: '0x0F2f043DBc72D3948bB7E392E6E3258dc2743376',
+}
+
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
-export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
-export const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
-export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
-export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A'
+export const MULTI_SEND_ADDRESS = MULTI_SEND_ADDRESSES[HARMONY_NETWORK[getNetworkId()]]
+export const SAFE_MASTER_COPY_ADDRESS = SAFE_MASTER_COPY_ADDRESSES[HARMONY_NETWORK[getNetworkId()]]
+export const DEFAULT_FALLBACK_HANDLER_ADDRESS = DEFAULT_FALLBACK_HANDLER_ADDRESSES[HARMONY_NETWORK[getNetworkId()]]
+export const SAFE_MASTER_COPY_ADDRESS_V10 = SAFE_MASTER_COPY_ADDRESS_V10ES[HARMONY_NETWORK[getNetworkId()]]
 
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe
 
+const SAFE_CONTRACTS = {
+  [HARMONY_NETWORK.MAINNET]: '0x3736aC8400751bf07c6A2E4db3F4f3D9D422abB2',
+  [HARMONY_NETWORK.TESTNET]: '0x0F2f043DBc72D3948bB7E392E6E3258dc2743376',
+}
+
+const PROXY_CONTRACTS = {
+  [HARMONY_NETWORK.MAINNET]: '0x4f9b1dEf3a0f6747bF8C870a27D3DeCdf029100e',
+  [HARMONY_NETWORK.TESTNET]: '0xAaCf9eb6614f7C110EF9b7D832BCe2E67EEC08c1',
+}
 /**
  * Creates a Contract instance of the GnosisSafe contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {HARMONY_NETWORK} networkId
  */
-export const getGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
-  const networks = GnosisSafeSol.networks
+export const getGnosisSafeContract = (web3: Web3, networkId: HARMONY_NETWORK) => {
   // TODO: this may not be the most scalable approach,
   //  but up until v1.2.0 the address is the same for all the networks.
   //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
-  const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
-  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], contractAddress) as unknown) as GnosisSafe
+  const contractAddress = SAFE_CONTRACTS[networkId] ?? SAFE_CONTRACTS[HARMONY_NETWORK.MAINNET]
+  return new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], contractAddress) as unknown as GnosisSafe
 }
 
 /**
  * Creates a Contract instance of the GnosisSafeProxyFactory contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {HARMONY_NETWORK} networkId
  */
-const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
-  const networks = ProxyFactorySol.networks
+const getProxyFactoryContract = (web3: Web3, networkId: HARMONY_NETWORK): GnosisSafeProxyFactory => {
   // TODO: this may not be the most scalable approach,
   //  but up until v1.2.0 the address is the same for all the networks.
   //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
-  const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
-  return (new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown) as GnosisSafeProxyFactory
+  const contractAddress = PROXY_CONTRACTS[networkId] ?? PROXY_CONTRACTS[HARMONY_NETWORK.MAINNET]
+  return new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown as GnosisSafeProxyFactory
 }
 
 export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
@@ -132,7 +160,7 @@ export const estimateGasForDeployingSafe = async (
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
-  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+  return new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown as GnosisSafe
 }
 
 /**
@@ -141,8 +169,8 @@ export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
 export const getSpendingLimitContract = () => {
   const web3 = getWeb3()
 
-  return (new web3.eth.Contract(
+  return new web3.eth.Contract(
     SpendingLimitModule.abi as AbiItem[],
     SPENDING_LIMIT_MODULE_ADDRESS,
-  ) as unknown) as AllowanceModule
+  ) as unknown as AllowanceModule
 }

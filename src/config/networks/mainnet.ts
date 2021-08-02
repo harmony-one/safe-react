@@ -1,19 +1,18 @@
-import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
+import HarmonyLogo from 'src/config/assets/token-one.png'
+import { EnvironmentSettings, HARMONY_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.mainnet.staging.gnosisdev.com/v1',
-  txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
-  safeUrl: 'https://gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
+  clientGatewayUrl: 'https://safe-client.t.hmny.io/v1',
+  txServiceUrl: 'https://multisig.t.hmny.io/api/v1',
+  safeUrl: 'https://multisig.harmony.one',
+  safeAppsUrl: 'https://multisig.harmony.one',
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',
     gasParameter: 'average',
   },
-  rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
-  networkExplorerName: 'Etherscan',
-  networkExplorerUrl: 'https://etherscan.io',
+  rpcServiceUrl: 'https://api.s0.t.hmny.io',
+  networkExplorerName: 'Harmony Explorer',
+  networkExplorerUrl: 'https://explorer.harmony.one/#',
   networkExplorerApiUrl: 'https://api.etherscan.io/api',
 }
 
@@ -24,27 +23,26 @@ const mainnet: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
+      safeAppsUrl: 'https://multisig.harmony.one',
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.mainnet.gnosis.io/v1',
-      txServiceUrl: 'https://safe-transaction.mainnet.gnosis.io/api/v1',
-      safeAppsUrl: 'https://apps.gnosis-safe.io',
+      txServiceUrl: 'https://multisig.t.hmny.io/api/v1',
+      safeAppsUrl: 'https://multisig.harmony.one',
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.MAINNET,
+    id: HARMONY_NETWORK.MAINNET,
     backgroundColor: '#E8E7E6',
     textColor: '#001428',
     label: 'Mainnet',
     isTestNet: false,
     nativeCoin: {
-      address: '0x0000000000000000000000000000000000000000',
-      name: 'Ether',
-      symbol: 'ETH',
+      address: '0x000',
+      name: 'Harmony',
+      symbol: 'ONE',
       decimals: 18,
-      logoUri: EtherLogo,
+      logoUri: HarmonyLogo,
     },
   },
 }
