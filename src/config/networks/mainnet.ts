@@ -2,7 +2,9 @@ import HarmonyLogo from 'src/config/assets/token-one.png'
 import { EnvironmentSettings, HARMONY_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
+  clientGatewayUrl: 'https://safe-client.t.hmny.io/v1',
   txServiceUrl: 'https://multisig.t.hmny.io/api/v1',
+  safeUrl: 'https://multisig.harmony.one',
   safeAppsUrl: 'https://multisig.harmony.one',
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',
