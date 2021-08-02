@@ -35,10 +35,8 @@ const styles = () => ({
     zIndex: 1301,
   },
   logo: {
-    flexBasis: '140px',
     flexShrink: '0',
     flexGrow: '0',
-    maxWidth: '55px',
     padding: sm,
     marginTop: '4px',
     [`@media (min-width: ${screenSm}px)`]: {
